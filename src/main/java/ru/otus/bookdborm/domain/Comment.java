@@ -7,14 +7,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "COMMENTS")
@@ -23,8 +25,9 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "BOOK_ID", nullable = false)
-    private long bookId;
+//    @Fetch(FetchMode.SUBSELECT)
+    @ManyToOne
+    private Book book;
 
     @Column(name = "COMMENT", nullable = false)
     private String comment;

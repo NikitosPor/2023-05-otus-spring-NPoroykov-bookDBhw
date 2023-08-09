@@ -18,7 +18,5 @@ public interface BookRepo {
 
     void deleteById(long id);
 
-    Optional<Book> getByTitle(String title);
-
     void updateTitleById(long id, String newTitle);
 }

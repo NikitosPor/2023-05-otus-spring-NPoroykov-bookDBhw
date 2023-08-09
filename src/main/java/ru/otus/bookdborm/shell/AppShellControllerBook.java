@@ -3,7 +3,6 @@ package ru.otus.bookdborm.shell;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.bookdborm.domain.Book;
-import ru.otus.bookdborm.domain.Comment;
 import ru.otus.bookdborm.helpers.IOService;
 import ru.otus.bookdborm.service.BookOperationsService;
 
@@ -57,14 +56,6 @@ public class AppShellControllerBook {
             String bookString = String.format("Книга ID: %d, Название: %s, Автор: %s, Жанр: %s", book.get().getId(),
                     book.get().getTitle(), book.get().getAuthor().getName(), book.get().getGenre().getTitle());
             ioService.outputString(bookString);
-            if (!book.get().getComments().isEmpty()) {
-                ioService.outputString("Список комментариев книги");
-                for (Comment nestedComment : book.get().getComments()) {
-                    String commentString = String.format("Комментарий: %s, c ID: %d",
-                            nestedComment.getComment(), nestedComment.getId());
-                    ioService.outputString(commentString);
-                }
-            }
         }
     }
 

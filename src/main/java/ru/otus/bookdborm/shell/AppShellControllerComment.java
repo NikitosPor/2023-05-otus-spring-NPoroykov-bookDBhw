@@ -8,6 +8,7 @@ import ru.otus.bookdborm.service.BookOperationsService;
 import ru.otus.bookdborm.service.CommentOperationsService;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @ShellComponent
@@ -42,7 +43,7 @@ public class AppShellControllerComment {
         } while (!isBookExist);
         ioService.outputString("Введите комментарий к книге");
         String commentLine = ioService.readString();
-        Comment comment = new Comment(0, bookId, commentLine);
+        Comment comment = new Comment(0, bookOperationsService.getById(bookId).get(), commentLine);
         Comment createdComment = commentOperationsService.create(comment);
         String commentString = String.format("Создан комментарий: %s, c ID: %d", comment.getComment(), comment.getId());
         ioService.outputString(commentString);
@@ -75,16 +76,22 @@ public class AppShellControllerComment {
 
     @ShellMethod(value = "Просмотр комментария в таблице Comments по ID", key = {"cs", "comment search"})
     public void askForCommentById(long id) {
-        Comment comment = commentOperationsService.getById(id).orElse(null);
-        String commentString = String.format("Комментарий: %s, c ID: %d", comment.getComment(), comment.getId());
-        ioService.outputString(commentString);
+        Optional<Comment> comment = commentOperationsService.getById(id);
+        boolean isCommentExist = comment.isPresent();
+        if (!isCommentExist) {
+            ioService.outputString("Комментария с таким ID не существует");
+        } else {
+            String commentString = String.format("Комментарий: %s, c ID: %d",
+                    comment.get().getComment(), comment.get().getId());
+            ioService.outputString(commentString);
+        }
     }
 
     @ShellMethod(value = "Просмотр списка комментариев в таблице Comments по ID_Книги", key = {"cl", "comment list"})
     public void askForCommentsByBookId(long bookId) {
         List<Comment> commentList = commentOperationsService.getListByBookId(bookId);
         ioService.outputString("Список комментариев книги");
-        for (Comment comment: commentList) {
+        for (Comment comment : commentList) {
             String commentString = String.format("Комментарий: %s, c ID: %d", comment.getComment(), comment.getId());
             ioService.outputString(commentString);
         }

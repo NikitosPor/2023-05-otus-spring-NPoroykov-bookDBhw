@@ -3,8 +3,10 @@ package ru.otus.bookdborm.repository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.bookdborm.domain.Book;
 import ru.otus.bookdborm.domain.Comment;
 
 import java.util.List;
@@ -47,22 +49,22 @@ public class CommentRepoJpa implements CommentRepo {
 
     @Override
     public void deleteById(long id) {
-        Query query = em.createQuery("delete from Comment c where c.id= :id");
-        query.setParameter("id", id);
-        query.executeUpdate();
+        Comment removedComment = em.find(Comment.class, id);
+        em.remove(removedComment);
     }
 
     @Override
-    public void updateById(long id, String title) {
-        Query query = em.createQuery("update Comment c set c.comment = :comment where c.id = :id");
-        query.setParameter("comment", title);
-        query.setParameter("id", id);
-        query.executeUpdate();
+    public void updateById(long id, String comment) {
+        Comment updatedComment = em.find(Comment.class, id);
+        updatedComment.setComment(comment);
+        this.insert(updatedComment);
     }
 
     public List<Comment> getListByBookId(long bookId) {
-        Query query = em.createQuery("select distinct c from Comment c where c.bookId = :bookId");
-        query.setParameter("bookId", bookId);
+        Book requestedBook = em.find(Book.class, bookId);
+        TypedQuery<Comment> query = em.createQuery("select distinct c from Comment c where c.book = :requestedBook",
+                Comment.class);
+        query.setParameter("requestedBook", requestedBook);
         List<Comment> listOfComments = query.getResultList();
         return listOfComments;
     }
