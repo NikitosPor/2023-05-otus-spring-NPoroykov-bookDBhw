@@ -36,14 +36,14 @@ class BookRepoJpaTest {
 
     @DisplayName(" должен показывать количество книг в базе данных")
     @Test
-    void count() {
+    void countTest() {
         var bookCount = bookRepoJpa.count();
         assertThat(bookCount).isEqualTo(EXPECTED_NUMBER_OF_BOOKS);
     }
 
     @DisplayName(" должен добавлять книгу в базу данных")
     @Test
-    void insert() {
+    void insertTest() {
         var expectedBook = new Book(0L, "Anna Karenina",
                 new Author(0, "Ivan Bunin"),
                 new Genre(0, "Commedian"));
@@ -54,7 +54,7 @@ class BookRepoJpaTest {
 
     @DisplayName(" должен загружать информацию о нужной книге по её id из базы данных")
     @Test
-    void getById() {
+    void getByIdTest() {
         val optionalActualBook = bookRepoJpa.getById(FIRST_BOOK_ID);
         val expectedBook = em.find(Book.class, FIRST_BOOK_ID);
         assertThat(optionalActualBook).isPresent().get()
@@ -63,7 +63,7 @@ class BookRepoJpaTest {
 
     @DisplayName(" должен получать все книги из базы данных")
     @Test
-    void getAll() {
+    void getAllTest() {
         val books = bookRepoJpa.getAll();
         assertThat(books).isNotNull().hasSize(EXPECTED_NUMBER_OF_BOOKS)
                 .allMatch(b -> !Objects.equals(b.getTitle(), "") && b.getTitle().getBytes().length > 0)
@@ -73,7 +73,7 @@ class BookRepoJpaTest {
 
     @DisplayName(" должен удалять книгу из базы данных")
     @Test
-    void deleteById() {
+    void deleteByIdTest() {
         assertThatCode(() -> bookRepoJpa.getById(FIRST_BOOK_ID)).doesNotThrowAnyException();
         bookRepoJpa.deleteById(FIRST_BOOK_ID);
         Optional<Book> actualBook = bookRepoJpa.getById(FIRST_BOOK_ID);
@@ -82,7 +82,7 @@ class BookRepoJpaTest {
 
     @DisplayName(" должен обновлять название книги в базе данных")
     @Test
-    void updateTitleById() {
+    void updateTitleByIdTest() {
         bookRepoJpa.updateTitleById(FIRST_BOOK_ID, BOOK_TITLE);
         Optional<Book> actualBook = bookRepoJpa.getById(FIRST_BOOK_ID);
         assertThat(actualBook.get().getTitle()).isEqualTo(BOOK_TITLE);

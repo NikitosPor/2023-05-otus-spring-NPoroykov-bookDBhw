@@ -1,0 +1,88 @@
+package ru.otus.bookdborm.repository;
+
+import lombok.val;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
+import ru.otus.bookdborm.domain.Book;
+import ru.otus.bookdborm.domain.Comment;
+
+import java.util.Objects;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+
+@DisplayName("Репозиторий на основе Jpa для работы с комментариями ")
+@DataJpaTest
+@Import(CommentRepoJpa.class)
+class CommentRepoJpaTest {
+
+    private static final int EXPECTED_NUMBER_OF_COMMENTS = 4;
+
+    private static final long SECOND_BOOK_ID = 2L;
+
+    private static final long FIRST_COMMENT_ID = 1L;
+
+    private static final String COMMENT_TITLE = "The greatest poem ever appeared in the world!";
+
+    @Autowired
+    private CommentRepoJpa commentRepoJpa;
+
+    @Autowired
+    private TestEntityManager em;
+
+    @DisplayName(" должен показывать количество комментариев в базе данных")
+    @Test
+    void countTest() {
+        var commentCount = commentRepoJpa.count();
+        assertThat(commentCount).isEqualTo(EXPECTED_NUMBER_OF_COMMENTS);
+    }
+
+    @DisplayName(" должен добавлять комментарий в базу данных")
+    @Test
+    void insertTest() {
+        var bookForComment = em.find(Book.class, SECOND_BOOK_ID);
+        var expectedComment = new Comment(0L, bookForComment, COMMENT_TITLE);
+        Comment comment = commentRepoJpa.insert(expectedComment);
+        var actualComment = commentRepoJpa.getById(comment.getId());
+        assertThat(actualComment).get().usingRecursiveComparison().isEqualTo(expectedComment);
+    }
+
+    @DisplayName(" должен загружать информацию о нужной книге по её id из базы данных")
+    @Test
+    void getByIdTest() {
+        val optionalActualComment = commentRepoJpa.getById(FIRST_COMMENT_ID);
+        val expectedComment = em.find(Comment.class, FIRST_COMMENT_ID);
+        assertThat(optionalActualComment).isPresent().get()
+                .usingRecursiveComparison().isEqualTo(expectedComment);
+    }
+
+    @DisplayName(" должен получать все комментарии по id книги из базы данных")
+    @Test
+    void getListByBookIdTest() {
+        val comments = commentRepoJpa.getListByBookId(SECOND_BOOK_ID);
+        assertThat(comments).isNotNull().hasSize(EXPECTED_NUMBER_OF_COMMENTS)
+                .allMatch(c -> !Objects.equals(c.getComment(), "") && c.getComment().getBytes().length > 0);
+    }
+
+    @DisplayName(" должен удалять комментарий из базы данных")
+    @Test
+    void deleteByIdTest() {
+        assertThatCode(() -> commentRepoJpa.getById(FIRST_COMMENT_ID)).doesNotThrowAnyException();
+        commentRepoJpa.deleteById(FIRST_COMMENT_ID);
+        Optional<Comment> actualComment = commentRepoJpa.getById(FIRST_COMMENT_ID);
+        assertThat(actualComment).isEmpty();
+    }
+
+    @DisplayName(" должен обновлять комментарий в базе данных")
+    @Test
+    void updateByIdTest() {
+        commentRepoJpa.updateById(FIRST_COMMENT_ID, COMMENT_TITLE);
+        Optional<Comment> actualComment = commentRepoJpa.getById(FIRST_COMMENT_ID);
+        assertThat(actualComment.get().getComment()).isEqualTo(COMMENT_TITLE);
+    }
+}
