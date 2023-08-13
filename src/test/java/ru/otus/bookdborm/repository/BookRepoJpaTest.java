@@ -12,7 +12,6 @@ import ru.otus.bookdborm.domain.Book;
 import ru.otus.bookdborm.domain.Genre;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -43,13 +42,13 @@ class BookRepoJpaTest {
 
     @DisplayName(" должен добавлять книгу в базу данных")
     @Test
-    void insertTest() {
+    void saveTest() {
         var expectedBook = new Book(0L, "Anna Karenina",
                 new Author(0, "Ivan Bunin"),
                 new Genre(0, "Commedian"));
-        Book book = bookRepoJpa.insert(expectedBook);
-        var actualBook = bookRepoJpa.getById(book.getId());
-        assertThat(actualBook).get().usingRecursiveComparison().isEqualTo(expectedBook);
+        Book book = bookRepoJpa.save(expectedBook);
+        var actualBook = em.find(Book.class, book.getId());
+        assertThat(actualBook).usingRecursiveComparison().isEqualTo(expectedBook);
     }
 
     @DisplayName(" должен загружать информацию о нужной книге по её id из базы данных")
@@ -76,15 +75,15 @@ class BookRepoJpaTest {
     void deleteByIdTest() {
         assertThatCode(() -> bookRepoJpa.getById(FIRST_BOOK_ID)).doesNotThrowAnyException();
         bookRepoJpa.deleteById(FIRST_BOOK_ID);
-        Optional<Book> actualBook = bookRepoJpa.getById(FIRST_BOOK_ID);
-        assertThat(actualBook).isEmpty();
+        Book actualBook = em.find(Book.class, FIRST_BOOK_ID);
+        assertThat(actualBook).isNull();
     }
 
     @DisplayName(" должен обновлять название книги в базе данных")
     @Test
     void updateTitleByIdTest() {
         bookRepoJpa.updateTitleById(FIRST_BOOK_ID, BOOK_TITLE);
-        Optional<Book> actualBook = bookRepoJpa.getById(FIRST_BOOK_ID);
-        assertThat(actualBook.get().getTitle()).isEqualTo(BOOK_TITLE);
+        Book actualBook = em.find(Book.class, FIRST_BOOK_ID);
+        assertThat(actualBook.getTitle()).isEqualTo(BOOK_TITLE);
     }
 }

@@ -10,7 +10,7 @@ public interface BookRepo {
 
     long count();
 
-    Book insert(Book book);
+    Book save(Book book);
 
     Optional<Book> getById(long id);
 

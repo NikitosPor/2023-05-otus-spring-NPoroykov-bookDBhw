@@ -21,7 +21,7 @@ public class CommentOperationsServiceImpl implements CommentOperationsService {
     @Transactional
     @Override
     public Comment create(Comment comment) {
-        return commentRepo.insert(comment);
+        return commentRepo.save(comment);
     }
 
     @Transactional(readOnly = true)

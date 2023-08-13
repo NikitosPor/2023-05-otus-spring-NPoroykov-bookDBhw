@@ -9,7 +9,7 @@ public interface CommentRepo {
 
     long count();
 
-    Comment insert(Comment comment);
+    Comment save(Comment comment);
 
     Optional<Comment> getById(long id);
 

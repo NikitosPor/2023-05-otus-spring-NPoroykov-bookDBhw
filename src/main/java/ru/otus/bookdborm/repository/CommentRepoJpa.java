@@ -6,7 +6,6 @@ import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.bookdborm.domain.Book;
 import ru.otus.bookdborm.domain.Comment;
 
 import java.util.List;
@@ -23,7 +22,6 @@ public class CommentRepoJpa implements CommentRepo {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public long count() {
         Query query = em.createQuery("select count(c) from Comment c");
         long resultCount = (long) query.getSingleResult();
@@ -32,7 +30,7 @@ public class CommentRepoJpa implements CommentRepo {
 
     @Override
     @Transactional
-    public Comment insert(Comment Comment) {
+    public Comment save(Comment Comment) {
         if (Comment.getId() <= 0) {
             em.persist(Comment);
         } else {
@@ -57,14 +55,13 @@ public class CommentRepoJpa implements CommentRepo {
     public void updateById(long id, String comment) {
         Comment updatedComment = em.find(Comment.class, id);
         updatedComment.setComment(comment);
-        this.insert(updatedComment);
+        this.save(updatedComment);
     }
 
     public List<Comment> getListByBookId(long bookId) {
-        Book requestedBook = em.find(Book.class, bookId);
-        TypedQuery<Comment> query = em.createQuery("select distinct c from Comment c where c.book = :requestedBook",
+        TypedQuery<Comment> query = em.createQuery("select distinct c from Comment c where c.book.id = :bookId",
                 Comment.class);
-        query.setParameter("requestedBook", requestedBook);
+        query.setParameter("bookId", bookId);
         List<Comment> listOfComments = query.getResultList();
         return listOfComments;
     }

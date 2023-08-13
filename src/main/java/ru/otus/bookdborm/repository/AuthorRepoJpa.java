@@ -28,7 +28,7 @@ public class AuthorRepoJpa implements AuthorRepo {
     }
 
     @Override
-    public Author insert(Author author) {
+    public Author save(Author author) {
         if (author.getId() <= 0) {
             em.persist(author);
             return author;

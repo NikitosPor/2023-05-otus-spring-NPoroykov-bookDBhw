@@ -30,12 +30,12 @@ public class BookOperationsServiceImpl implements BookOperationsService {
     @Transactional
     public Book create(String bookTitle, String bookAuthor, String bookGenre) {
         Optional<Author> author = authorRepo.getByName(bookAuthor)
-                .or(() -> Optional.ofNullable(authorRepo.insert(new Author(0, bookAuthor))));
+                .or(() -> Optional.ofNullable(authorRepo.save(new Author(0, bookAuthor))));
         Optional<Genre> genre = genreRepo.getByTitle(bookGenre)
-                .or(() -> Optional.ofNullable(genreRepo.insert(new Genre(0, bookGenre))));
+                .or(() -> Optional.ofNullable(genreRepo.save(new Genre(0, bookGenre))));
 
         Book createdBook = new Book(0L, bookTitle, author.get(), genre.get());
-        return bookRepo.insert(createdBook);
+        return bookRepo.save(createdBook);
     }
 
     @Transactional

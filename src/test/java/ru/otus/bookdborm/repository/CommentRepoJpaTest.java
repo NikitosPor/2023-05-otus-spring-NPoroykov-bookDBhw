@@ -11,7 +11,6 @@ import ru.otus.bookdborm.domain.Book;
 import ru.otus.bookdborm.domain.Comment;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -44,12 +43,12 @@ class CommentRepoJpaTest {
 
     @DisplayName(" должен добавлять комментарий в базу данных")
     @Test
-    void insertTest() {
+    void saveTest() {
         var bookForComment = em.find(Book.class, SECOND_BOOK_ID);
         var expectedComment = new Comment(0L, bookForComment, COMMENT_TITLE);
-        Comment comment = commentRepoJpa.insert(expectedComment);
-        var actualComment = commentRepoJpa.getById(comment.getId());
-        assertThat(actualComment).get().usingRecursiveComparison().isEqualTo(expectedComment);
+        Comment comment = commentRepoJpa.save(expectedComment);
+        var actualComment = em.find(Comment.class, comment.getId());
+        assertThat(actualComment).usingRecursiveComparison().isEqualTo(expectedComment);
     }
 
     @DisplayName(" должен загружать информацию о нужной книге по её id из базы данных")
@@ -72,17 +71,17 @@ class CommentRepoJpaTest {
     @DisplayName(" должен удалять комментарий из базы данных")
     @Test
     void deleteByIdTest() {
-        assertThatCode(() -> commentRepoJpa.getById(FIRST_COMMENT_ID)).doesNotThrowAnyException();
+        assertThatCode(() -> em.find(Comment.class, FIRST_COMMENT_ID)).doesNotThrowAnyException();
         commentRepoJpa.deleteById(FIRST_COMMENT_ID);
-        Optional<Comment> actualComment = commentRepoJpa.getById(FIRST_COMMENT_ID);
-        assertThat(actualComment).isEmpty();
+        Comment actualComment = em.find(Comment.class, FIRST_COMMENT_ID);
+        assertThat(actualComment).isNull();
     }
 
     @DisplayName(" должен обновлять комментарий в базе данных")
     @Test
     void updateByIdTest() {
         commentRepoJpa.updateById(FIRST_COMMENT_ID, COMMENT_TITLE);
-        Optional<Comment> actualComment = commentRepoJpa.getById(FIRST_COMMENT_ID);
-        assertThat(actualComment.get().getComment()).isEqualTo(COMMENT_TITLE);
+        Comment actualComment = em.find(Comment.class, FIRST_COMMENT_ID);
+        assertThat(actualComment.getComment()).isEqualTo(COMMENT_TITLE);
     }
 }

@@ -9,7 +9,7 @@ public interface AuthorRepo {
 
     long count();
 
-    Author insert(Author author);
+    Author save(Author author);
 
     Optional<Author> getById(long id);
 

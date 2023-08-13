@@ -1,13 +1,7 @@
 package ru.otus.bookdborm.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +19,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @Fetch(FetchMode.SUBSELECT)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Book book;
 
     @Column(name = "COMMENT", nullable = false)

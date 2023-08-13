@@ -28,7 +28,7 @@ public class BookRepoJpa implements BookRepo {
     }
 
     @Override
-    public Book insert(Book book) {
+    public Book save(Book book) {
         if (book.getId() <= 0) {
             em.persist(book);
         } else {
@@ -61,6 +61,6 @@ public class BookRepoJpa implements BookRepo {
     public void updateTitleById(long id, String title) {
         Book updatedBook = em.find(Book.class, id);
         updatedBook.setTitle(title);
-        this.insert(updatedBook);
+        this.save(updatedBook);
     }
 }

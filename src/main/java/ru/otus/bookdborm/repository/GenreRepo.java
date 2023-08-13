@@ -9,7 +9,7 @@ public interface GenreRepo {
 
     long count();
 
-    Genre insert(Genre genre);
+    Genre save(Genre genre);
 
     Optional<Genre> getById(long id);
 

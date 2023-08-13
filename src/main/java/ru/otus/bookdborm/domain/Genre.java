@@ -8,12 +8,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import jakarta.persistence.GenerationType;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

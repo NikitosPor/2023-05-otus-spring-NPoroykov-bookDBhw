@@ -1,12 +1,6 @@
 package ru.otus.bookdborm.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
-import jakarta.persistence.Table;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,10 +21,10 @@ public class Book {
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private Author author;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     private Genre genre;
 
 }

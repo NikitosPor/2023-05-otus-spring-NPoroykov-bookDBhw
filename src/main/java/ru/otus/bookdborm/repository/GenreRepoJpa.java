@@ -43,7 +43,7 @@ public class GenreRepoJpa implements GenreRepo {
     }
 
     @Override
-    public Genre insert(Genre genre) {
+    public Genre save(Genre genre) {
         if (genre.getId() <= 0) {
             em.persist(genre);
             return genre;

@@ -19,7 +19,7 @@ public class GenreOperationsServiceImpl implements GenreOperationsService {
 
     @Transactional
     public Genre create(Genre genre) {
-        return genreRepo.insert(genre);
+        return genreRepo.save(genre);
     }
 
     @Transactional(readOnly = true)

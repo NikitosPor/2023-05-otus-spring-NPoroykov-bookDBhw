@@ -19,7 +19,7 @@ public class AuthorOperationsServiceImpl implements AuthorOperationsService {
 
     @Transactional
     public Author create(Author author) {
-        return authorRepo.insert(author);
+        return authorRepo.save(author);
     }
 
     @Transactional(readOnly = true)
