@@ -37,14 +37,17 @@ public class AppShellControllerAuthor {
     }
 
     @ShellMethod(value = "Просмотр автора в таблице AUTHORS по ID", key = {"as", "author search"})
-    public void askForAuthorById(long id) {
+    public void askForAuthorByName(long id) {
         Optional<Author> author = authorOperationsService.getById(id);
-        if (author.isEmpty()) {
-            ioService.outputString("Автор не найден ((");
-        } else {
-            String authorString = String.format("Автор ID: %d, Имя: %s", author.get().getId(), author.get().getName());
-            ioService.outputString(authorString);
-        }
+        author.ifPresentOrElse(
+                (value) -> {
+                    String authorString = String.format("Автор ID: %d, Имя: %s", value.getId(), value.getName());
+                    ioService.outputString(authorString);
+                },
+                () -> {
+                    ioService.outputString("Автор не найден ((");
+                }
+        );
     }
 
     @ShellMethod(value = "Узнать количество авторов в таблице AUTHORS", key = {"aa", "author amount"})
@@ -64,16 +67,20 @@ public class AppShellControllerAuthor {
     }
 
     @ShellMethod(value = "Просмотр автора в таблице AUTHORS по NAME", key = {"an", "author name"})
-    public void askForAuthorById() {
+    public void askForAuthorByName() {
         ioService.outputString("Введите <Имя автора книги> и нажмите Enter");
         String authorName = ioService.readString();
         Optional<Author> author = authorOperationsService.getByName(authorName);
-        if (author.isEmpty()) {
-            ioService.outputString("Автор не найден ((");
-        } else {
-            String authorString = String.format("Автор ID: %d, Имя: %s", author.get().getId(), author.get().getName());
-            ioService.outputString(authorString);
-        }
+
+        author.ifPresentOrElse(
+                (value) -> {
+                    String authorString = String.format("Автор ID: %d, Имя: %s", value.getId(), value.getName());
+                    ioService.outputString(authorString);
+                },
+                () -> {
+                    ioService.outputString("Автор не найден ((");
+                }
+        );
     }
 
 }

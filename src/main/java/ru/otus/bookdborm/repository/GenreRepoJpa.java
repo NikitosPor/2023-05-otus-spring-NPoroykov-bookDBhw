@@ -60,7 +60,7 @@ public class GenreRepoJpa implements GenreRepo {
 
     @Override
     public List<Genre> getAll() {
-        Query query = em.createQuery("select g from Genre g");
+        TypedQuery<Genre> query = em.createQuery("select g from Genre g", Genre.class);
         return query.getResultList();
     }
 }

@@ -40,14 +40,15 @@ public class AppShellControllerGenre {
     @ShellMethod(value = "Просмотр жанра в таблице GENRES по ID", key = {"gs", "genre search"})
     public void askForGenreById(long id) {
         Optional<Genre> genre = genreOperationsService.getById(id);
-
-        if (genre.isEmpty()) {
-            ioService.outputString("Жанр не найден ((");
-        } else {
-            String genreIdString = String.format("Жанр ID: %d, Название: %s",
-                    genre.get().getId(), genre.get().getTitle());
-            ioService.outputString(genreIdString);
-        }
+        genre.ifPresentOrElse(
+                (value) -> {
+                    String genreIdString = String.format("Жанр ID: %d, Название: %s", value.getId(), value.getTitle());
+                    ioService.outputString(genreIdString);
+                },
+                () -> {
+                    ioService.outputString("Жанр не найден ((");
+                }
+        );
     }
 
     @ShellMethod(value = "Узнать количество жанров в таблице GENRES", key = {"ga", "genre amount"})

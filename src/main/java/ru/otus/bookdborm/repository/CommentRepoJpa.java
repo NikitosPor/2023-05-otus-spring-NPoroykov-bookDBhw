@@ -59,7 +59,7 @@ public class CommentRepoJpa implements CommentRepo {
     }
 
     public List<Comment> getListByBookId(long bookId) {
-        TypedQuery<Comment> query = em.createQuery("select distinct c from Comment c where c.book.id = :bookId",
+        TypedQuery<Comment> query = em.createQuery("select c from Comment c where c.book.id = :bookId",
                 Comment.class);
         query.setParameter("bookId", bookId);
         List<Comment> listOfComments = query.getResultList();

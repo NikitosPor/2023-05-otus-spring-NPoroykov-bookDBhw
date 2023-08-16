@@ -50,13 +50,16 @@ public class AppShellControllerBook {
     public void askForBookById(long id) {
         Optional<Book> book = bookOperationsService.getById(id);
 
-        if (book.isEmpty()) {
-            ioService.outputString("Книга не найдена ((");
-        } else {
-            String bookString = String.format("Книга ID: %d, Название: %s, Автор: %s, Жанр: %s", book.get().getId(),
-                    book.get().getTitle(), book.get().getAuthor().getName(), book.get().getGenre().getTitle());
-            ioService.outputString(bookString);
-        }
+        book.ifPresentOrElse(
+                (value) -> {
+                    String bookString = String.format("Книга ID: %d, Название: %s, Автор: %s, Жанр: %s", value.getId(),
+                            value.getTitle(), value.getAuthor().getName(), value.getGenre().getTitle());
+                    ioService.outputString(bookString);
+                },
+                () -> {
+                    ioService.outputString("Книга не найдена ((");
+                }
+        );
     }
 
     @ShellMethod(value = "Узнать количество книг в таблице BOOKS", key = {"ba", "book amount"})
@@ -79,13 +82,15 @@ public class AppShellControllerBook {
     @ShellMethod(value = "Обновление книги в таблице BOOKS", key = {"bu", "book update"})
     public void updateBookById(long id) {
         Optional<Book> book = bookOperationsService.getById(id);
-
-        if (book.isEmpty()) {
-            ioService.outputString("Книга с таким id не найдена ((");
-        } else {
-            ioService.outputString("Введите новое <Название книги> и нажмите Enter");
-            String bookTitle = ioService.readString();
-            bookOperationsService.updateTitleById(id, bookTitle);
-        }
+        book.ifPresentOrElse(
+                (value) -> {
+                    ioService.outputString("Введите новое <Название книги> и нажмите Enter");
+                    String bookTitle = ioService.readString();
+                    bookOperationsService.updateTitleById(id, bookTitle);
+                },
+                () -> {
+                    ioService.outputString("Книга с таким id не найдена ((");
+                }
+        );
     }
 }

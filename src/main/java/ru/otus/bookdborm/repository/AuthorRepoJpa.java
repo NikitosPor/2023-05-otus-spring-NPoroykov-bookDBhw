@@ -1,10 +1,6 @@
 package ru.otus.bookdborm.repository;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.*;
 import org.springframework.stereotype.Repository;
 import ru.otus.bookdborm.domain.Author;
 
@@ -58,7 +54,7 @@ public class AuthorRepoJpa implements AuthorRepo {
 
     @Override
     public List<Author> getAll() {
-        Query query = em.createQuery("select a from Author a");
+        TypedQuery<Author> query = em.createQuery("select a from Author a", Author.class);
         return query.getResultList();
     }
 

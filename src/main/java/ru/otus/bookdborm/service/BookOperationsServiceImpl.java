@@ -29,12 +29,12 @@ public class BookOperationsServiceImpl implements BookOperationsService {
 
     @Transactional
     public Book create(String bookTitle, String bookAuthor, String bookGenre) {
-        Optional<Author> author = authorRepo.getByName(bookAuthor)
-                .or(() -> Optional.ofNullable(authorRepo.save(new Author(0, bookAuthor))));
-        Optional<Genre> genre = genreRepo.getByTitle(bookGenre)
-                .or(() -> Optional.ofNullable(genreRepo.save(new Genre(0, bookGenre))));
+        Author author = authorRepo.getByName(bookAuthor)
+                .orElseGet(() -> authorRepo.save(new Author(0, bookAuthor)));
+        Genre genre = genreRepo.getByTitle(bookGenre)
+                .orElseGet(() -> genreRepo.save(new Genre(0, bookGenre)));
 
-        Book createdBook = new Book(0L, bookTitle, author.get(), genre.get());
+        Book createdBook = new Book(0L, bookTitle, author, genre);
         return bookRepo.save(createdBook);
     }
 

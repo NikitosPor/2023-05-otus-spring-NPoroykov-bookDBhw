@@ -77,14 +77,16 @@ public class AppShellControllerComment {
     @ShellMethod(value = "Просмотр комментария в таблице Comments по ID", key = {"cs", "comment search"})
     public void askForCommentById(long id) {
         Optional<Comment> comment = commentOperationsService.getById(id);
-        boolean isCommentExist = comment.isPresent();
-        if (!isCommentExist) {
-            ioService.outputString("Комментария с таким ID не существует");
-        } else {
-            String commentString = String.format("Комментарий: %s, c ID: %d",
-                    comment.get().getComment(), comment.get().getId());
-            ioService.outputString(commentString);
-        }
+        comment.ifPresentOrElse(
+                (value) -> {
+                    String commentString = String.format("Комментарий: %s, c ID: %d",
+                            value.getComment(), value.getId());
+                    ioService.outputString(commentString);
+                },
+                () -> {
+                    ioService.outputString("Комментария с таким ID не существует");
+                }
+        );
     }
 
     @ShellMethod(value = "Просмотр списка комментариев в таблице Comments по ID_Книги", key = {"cl", "comment list"})
