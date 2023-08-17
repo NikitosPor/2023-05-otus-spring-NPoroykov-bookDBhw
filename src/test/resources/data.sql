@@ -1,0 +1,15 @@
+insert into AUTHORS (NAME) values ('Leo Tolstoy');
+insert into AUTHORS (NAME) values ('Alex Pushkin');
+insert into AUTHORS (NAME) values ('Michael Sholokhov');
+insert into AUTHORS (NAME) values ('Arthur Conan Doyle');
+insert into AUTHORS (NAME) values ('Nikolay Gogol');
+insert into GENRES (TITLE) values ('Tale');
+insert into GENRES (TITLE) values ('Drama');
+insert into GENRES (TITLE) values ('Detective');
+insert into BOOKS (TITLE, AUTHOR_ID, GENRE_ID) values ('War and peace', 1, 2);
+insert into BOOKS (TITLE, AUTHOR_ID, GENRE_ID) values ('Eugene Onegin', 2, 2);
+insert into BOOKS (TITLE, AUTHOR_ID, GENRE_ID) values ('Kazaks', 1, 1);
+insert into COMMENTS (BOOK_ID, COMMENT) values (2, 'Famous literature composition');
+insert into COMMENTS (BOOK_ID, COMMENT) values (2, 'One of the most epic drama in the world');
+insert into COMMENTS (BOOK_ID, COMMENT) values (2, 'Alex Pushkin wrote it when he was young boy');
+insert into COMMENTS (BOOK_ID, COMMENT) values (2, 'Russian pupils learn it in school');
