@@ -17,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 @DisplayName("Репозиторий на основе Jpa для работы с комментариями ")
 @DataJpaTest
-@Import(CommentRepoJpa.class)
 class CommentRepoJpaTest {
 
     private static final int EXPECTED_NUMBER_OF_COMMENTS = 4;
@@ -29,7 +28,7 @@ class CommentRepoJpaTest {
     private static final String COMMENT_TITLE = "The greatest poem ever appeared in the world!";
 
     @Autowired
-    private CommentRepoJpa commentRepoJpa;
+    private CommentRepo commentRepo;
 
     @Autowired
     private TestEntityManager em;
@@ -37,7 +36,7 @@ class CommentRepoJpaTest {
     @DisplayName(" должен показывать количество комментариев в базе данных")
     @Test
     void countTest() {
-        var commentCount = commentRepoJpa.count();
+        var commentCount = commentRepo.count();
         assertThat(commentCount).isEqualTo(EXPECTED_NUMBER_OF_COMMENTS);
     }
 
@@ -46,7 +45,7 @@ class CommentRepoJpaTest {
     void saveTest() {
         var bookForComment = em.find(Book.class, SECOND_BOOK_ID);
         var expectedComment = new Comment(0L, bookForComment, COMMENT_TITLE);
-        Comment comment = commentRepoJpa.save(expectedComment);
+        Comment comment = commentRepo.save(expectedComment);
         var actualComment = em.find(Comment.class, comment.getId());
         assertThat(actualComment).usingRecursiveComparison().isEqualTo(expectedComment);
     }
@@ -54,7 +53,7 @@ class CommentRepoJpaTest {
     @DisplayName(" должен загружать информацию о нужной книге по её id из базы данных")
     @Test
     void getByIdTest() {
-        val optionalActualComment = commentRepoJpa.getById(FIRST_COMMENT_ID);
+        val optionalActualComment = commentRepo.findById(FIRST_COMMENT_ID);
         val expectedComment = em.find(Comment.class, FIRST_COMMENT_ID);
         assertThat(optionalActualComment).isPresent().get()
                 .usingRecursiveComparison().isEqualTo(expectedComment);
@@ -63,7 +62,7 @@ class CommentRepoJpaTest {
     @DisplayName(" должен получать все комментарии по id книги из базы данных")
     @Test
     void getListByBookIdTest() {
-        val comments = commentRepoJpa.getListByBookId(SECOND_BOOK_ID);
+        val comments = commentRepo.findAllByBookId(SECOND_BOOK_ID);
         assertThat(comments).isNotNull().hasSize(EXPECTED_NUMBER_OF_COMMENTS)
                 .allMatch(c -> !Objects.equals(c.getComment(), "") && c.getComment().getBytes().length > 0);
     }
@@ -72,7 +71,7 @@ class CommentRepoJpaTest {
     @Test
     void deleteByIdTest() {
         assertThatCode(() -> em.find(Comment.class, FIRST_COMMENT_ID)).doesNotThrowAnyException();
-        commentRepoJpa.deleteById(FIRST_COMMENT_ID);
+        commentRepo.deleteById(FIRST_COMMENT_ID);
         Comment actualComment = em.find(Comment.class, FIRST_COMMENT_ID);
         assertThat(actualComment).isNull();
     }
@@ -80,7 +79,7 @@ class CommentRepoJpaTest {
     @DisplayName(" должен обновлять комментарий в базе данных")
     @Test
     void updateByIdTest() {
-        commentRepoJpa.updateById(FIRST_COMMENT_ID, COMMENT_TITLE);
+        commentRepo.updateById(FIRST_COMMENT_ID, COMMENT_TITLE);
         Comment actualComment = em.find(Comment.class, FIRST_COMMENT_ID);
         assertThat(actualComment.getComment()).isEqualTo(COMMENT_TITLE);
     }

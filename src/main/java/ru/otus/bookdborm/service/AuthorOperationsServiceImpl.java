@@ -24,7 +24,7 @@ public class AuthorOperationsServiceImpl implements AuthorOperationsService {
 
     @Transactional(readOnly = true)
     public Optional<Author> getById(long id) {
-        return authorRepo.getById(id);
+        return authorRepo.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -34,11 +34,11 @@ public class AuthorOperationsServiceImpl implements AuthorOperationsService {
 
     @Transactional(readOnly = true)
     public List<Author> getAll() {
-        return authorRepo.getAll();
+        return (List<Author>) authorRepo.findAll();
     }
 
     @Transactional(readOnly = true)
     public Optional<Author> getByName(String name) {
-        return authorRepo.getByName(name);
+        return authorRepo.findByName(name);
     }
 }

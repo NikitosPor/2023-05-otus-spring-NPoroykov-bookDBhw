@@ -1,22 +1,20 @@
 package ru.otus.bookdborm.repository;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import ru.otus.bookdborm.domain.Book;
 
-import java.util.List;
-import java.util.Optional;
 
+public interface BookRepo extends CrudRepository<Book, Long> {
 
-public interface BookRepo {
+    @Modifying
+    @Query("update Book b set b.title = :title where b.id = :id")
+    void updateTitleById(@Param("id") long id, @Param("title") String title);
 
-    long count();
+    @Modifying
+    @Query("select distinct b from Book b left join fetch b.genre left join fetch b.author")
+    Iterable<Book> findAll();
 
-    Book save(Book book);
-
-    Optional<Book> getById(long id);
-
-    List<Book> getAll();
-
-    void deleteById(long id);
-
-    void updateTitleById(long id, String newTitle);
 }

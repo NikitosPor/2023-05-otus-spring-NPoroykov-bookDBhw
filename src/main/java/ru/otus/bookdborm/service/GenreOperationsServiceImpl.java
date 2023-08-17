@@ -24,7 +24,7 @@ public class GenreOperationsServiceImpl implements GenreOperationsService {
 
     @Transactional(readOnly = true)
     public Optional<Genre> getById(long id) {
-        return genreRepo.getById(id);
+        return genreRepo.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -34,7 +34,7 @@ public class GenreOperationsServiceImpl implements GenreOperationsService {
 
     @Transactional(readOnly = true)
     public List<Genre> getAll() {
-        return genreRepo.getAll();
+        return (List<Genre>) genreRepo.findAll();
     }
 
 
