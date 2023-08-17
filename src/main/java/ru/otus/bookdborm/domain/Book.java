@@ -21,10 +21,10 @@ public class Book {
     @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Author author;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     private Genre genre;
 
 }
