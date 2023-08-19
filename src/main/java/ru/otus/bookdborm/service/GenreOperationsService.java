@@ -15,4 +15,5 @@ public interface GenreOperationsService {
 
     List<Genre> getAll();
 
+    Optional<Genre> getByTitle(String title);
 }

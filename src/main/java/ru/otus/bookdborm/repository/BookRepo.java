@@ -13,7 +13,7 @@ public interface BookRepo extends CrudRepository<Book, Long> {
     @Query("update Book b set b.title = :title where b.id = :id")
     void updateTitleById(@Param("id") long id, @Param("title") String title);
 
-    @Modifying
+
     @Query("select distinct b from Book b left join fetch b.genre left join fetch b.author")
     Iterable<Book> findAll();
 

@@ -37,5 +37,8 @@ public class GenreOperationsServiceImpl implements GenreOperationsService {
         return (List<Genre>) genreRepo.findAll();
     }
 
-
+    @Transactional(readOnly = true)
+    public Optional<Genre> getByTitle(String title) {
+        return genreRepo.findByTitle(title);
+    }
 }

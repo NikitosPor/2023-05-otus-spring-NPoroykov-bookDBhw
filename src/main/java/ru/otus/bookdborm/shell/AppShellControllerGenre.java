@@ -1,5 +1,6 @@
 package ru.otus.bookdborm.shell;
 
+import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.bookdborm.domain.Genre;
@@ -14,41 +15,36 @@ public class AppShellControllerGenre {
 
     private final IOService ioService;
 
+    private final ConversionService conversionService;
+
     private final GenreOperationsService genreOperationsService;
 
     public AppShellControllerGenre(GenreOperationsService genreOperationsService,
-                                   IOService ioService) {
+                                   IOService ioService, ConversionService conversionService) {
         this.genreOperationsService = genreOperationsService;
         this.ioService = ioService;
+        this.conversionService = conversionService;
     }
 
 
     @ShellMethod(value = "Cоздание нового жанра в таблице GENRES", key = {"gc", "genre creation"})
-    public void askForGenreCreation() {
+    public String askForGenreCreation() {
         ioService.outputString("Введите <Название жанра> и нажмите Enter");
         String genreTitle = ioService.readString();
         Genre genre = new Genre(0, genreTitle);
 
         Genre createdGenre = genreOperationsService.create(genre);
         if (createdGenre != null) {
-            String genreString = String.format("Создан жанр ID: %d, Название: %s",
-                    genre.getId(), genre.getTitle());
-            ioService.outputString(genreString);
+            return conversionService.convert(createdGenre, String.class);
+        } else {
+            return "Жанр не создан((";
         }
     }
 
     @ShellMethod(value = "Просмотр жанра в таблице GENRES по ID", key = {"gs", "genre search"})
-    public void askForGenreById(long id) {
+    public String askForGenreById(long id) {
         Optional<Genre> genre = genreOperationsService.getById(id);
-        genre.ifPresentOrElse(
-                (value) -> {
-                    String genreIdString = String.format("Жанр ID: %d, Название: %s", value.getId(), value.getTitle());
-                    ioService.outputString(genreIdString);
-                },
-                () -> {
-                    ioService.outputString("Жанр не найден ((");
-                }
-        );
+        return conversionService.convert(genre, String.class);
     }
 
     @ShellMethod(value = "Узнать количество жанров в таблице GENRES", key = {"ga", "genre amount"})
@@ -62,9 +58,15 @@ public class AppShellControllerGenre {
     public void askForAllGenres() {
         List<Genre> listOfGenres = genreOperationsService.getAll();
         for (Genre genre : listOfGenres) {
-            String genreString = String.format("Жанр ID: %d, Название: %s", genre.getId(), genre.getTitle());
+            String genreString = conversionService.convert(genre, String.class);
             ioService.outputString(genreString);
         }
+    }
+
+    @ShellMethod(value = "Просмотр жанра в таблице GENRES по TITLE", key = {"gn", "genre title"})
+    public String askForGenreByTitle(String title) {
+        Optional<Genre> genre = genreOperationsService.getByTitle(title);
+        return conversionService.convert(genre, String.class);
     }
 
 }
