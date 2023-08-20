@@ -1,4 +1,4 @@
-package ru.otus.bookdborm.helpers;
+package ru.otus.bookdborm.config;
 
 
 import org.springframework.context.annotation.Bean;

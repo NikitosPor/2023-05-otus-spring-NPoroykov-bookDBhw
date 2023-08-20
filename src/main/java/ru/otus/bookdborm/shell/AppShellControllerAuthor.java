@@ -20,7 +20,8 @@ public class AppShellControllerAuthor {
     private final AuthorOperationsService authorOperationsService;
 
     public AppShellControllerAuthor(AuthorOperationsService authorOperationsService,
-                                    IOService ioService, ConversionService conversionService) {
+                                    IOService ioService,
+                                    ConversionService conversionService) {
         this.authorOperationsService = authorOperationsService;
         this.ioService = ioService;
         this.conversionService = conversionService;
@@ -41,16 +42,22 @@ public class AppShellControllerAuthor {
     }
 
     @ShellMethod(value = "Просмотр автора в таблице AUTHORS по ID", key = {"as", "author search"})
-    public String askForAuthorByName(long id) {
+    public String askForAuthorById(long id) {
         Optional<Author> author = authorOperationsService.getById(id);
-        return conversionService.convert(author, String.class);
+
+        if (author.isEmpty()) {
+            return "Автор не найден ((";
+        } else {
+            return conversionService.convert(author.get(), String.class);
+        }
     }
 
     @ShellMethod(value = "Узнать количество авторов в таблице AUTHORS", key = {"aa", "author amount"})
-    public void askForAuthorAmount() {
+    public String askForAuthorAmount() {
         long numberOfAuthors = authorOperationsService.countOfAll();
         String numberOfAuthorsString = String.format("Количество авторов в таблице = %d", numberOfAuthors);
-        ioService.outputString(numberOfAuthorsString);
+
+        return numberOfAuthorsString;
     }
 
     @ShellMethod(value = "Показать всех авторов в таблице AUTHORS", key = {"al", "author list"})
@@ -67,7 +74,12 @@ public class AppShellControllerAuthor {
         ioService.outputString("Введите <Имя автора книги> и нажмите Enter");
         String authorName = ioService.readString();
         Optional<Author> author = authorOperationsService.getByName(authorName);
-        return conversionService.convert(author, String.class);
+
+        if (author.isEmpty()) {
+            return "Автор не найден ((";
+        } else {
+            return conversionService.convert(author.get(), String.class);
+        }
     }
 
 }

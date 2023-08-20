@@ -1,4 +1,4 @@
-package ru.otus.bookdborm.helpers;
+package ru.otus.bookdborm.config.converters;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

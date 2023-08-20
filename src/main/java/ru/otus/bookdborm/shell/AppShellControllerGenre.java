@@ -20,7 +20,8 @@ public class AppShellControllerGenre {
     private final GenreOperationsService genreOperationsService;
 
     public AppShellControllerGenre(GenreOperationsService genreOperationsService,
-                                   IOService ioService, ConversionService conversionService) {
+                                   IOService ioService,
+                                   ConversionService conversionService) {
         this.genreOperationsService = genreOperationsService;
         this.ioService = ioService;
         this.conversionService = conversionService;
@@ -44,14 +45,20 @@ public class AppShellControllerGenre {
     @ShellMethod(value = "Просмотр жанра в таблице GENRES по ID", key = {"gs", "genre search"})
     public String askForGenreById(long id) {
         Optional<Genre> genre = genreOperationsService.getById(id);
-        return conversionService.convert(genre, String.class);
+
+        if (genre.isEmpty()) {
+            return "Жанр не найден ((";
+        } else {
+            return conversionService.convert(genre.get(), String.class);
+        }
     }
 
     @ShellMethod(value = "Узнать количество жанров в таблице GENRES", key = {"ga", "genre amount"})
-    public void askForGenreAmount() {
+    public String askForGenreAmount() {
         long numberOfGenres = genreOperationsService.countOfAll();
         String numberOfGenresString = String.format("Количество жанров в таблице = %d", numberOfGenres);
-        ioService.outputString(numberOfGenresString);
+
+        return numberOfGenresString;
     }
 
     @ShellMethod(value = "Показать все жанры в таблице GENRES", key = {"gl", "genre list"})
@@ -66,7 +73,12 @@ public class AppShellControllerGenre {
     @ShellMethod(value = "Просмотр жанра в таблице GENRES по TITLE", key = {"gn", "genre title"})
     public String askForGenreByTitle(String title) {
         Optional<Genre> genre = genreOperationsService.getByTitle(title);
-        return conversionService.convert(genre, String.class);
+
+        if (genre.isEmpty()) {
+            return "Жанр не найден ((";
+        } else {
+            return conversionService.convert(genre.get(), String.class);
+        }
     }
 
 }
