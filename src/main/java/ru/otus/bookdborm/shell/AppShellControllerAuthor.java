@@ -27,7 +27,7 @@ public class AppShellControllerAuthor {
         this.conversionService = conversionService;
     }
 
-    @ShellMethod(value = "Cоздание нового автора в таблице AUTHORS", key = {"ac", "author creation"})
+    @ShellMethod(value = "Cоздание нового автора", key = {"ac", "author creation"})
     public String askForAuthorCreation() {
         ioService.outputString("Введите <Имя автора книги> и нажмите Enter");
         String authorName = ioService.readString();
@@ -41,7 +41,7 @@ public class AppShellControllerAuthor {
         }
     }
 
-    @ShellMethod(value = "Просмотр автора в таблице AUTHORS по ID", key = {"as", "author search"})
+    @ShellMethod(value = "Просмотр автора по ID", key = {"as", "author search"})
     public String askForAuthorById(long id) {
         Optional<Author> author = authorOperationsService.getById(id);
 
@@ -52,7 +52,7 @@ public class AppShellControllerAuthor {
         }
     }
 
-    @ShellMethod(value = "Узнать количество авторов в таблице AUTHORS", key = {"aa", "author amount"})
+    @ShellMethod(value = "Узнать количество авторов", key = {"aa", "author amount"})
     public String askForAuthorAmount() {
         long numberOfAuthors = authorOperationsService.countOfAll();
         String numberOfAuthorsString = String.format("Количество авторов в таблице = %d", numberOfAuthors);
@@ -60,7 +60,7 @@ public class AppShellControllerAuthor {
         return numberOfAuthorsString;
     }
 
-    @ShellMethod(value = "Показать всех авторов в таблице AUTHORS", key = {"al", "author list"})
+    @ShellMethod(value = "Показать всех авторов", key = {"al", "author list"})
     public void askForAllAuthors() {
         List<Author> listOfAuthors = authorOperationsService.getAll();
         for (Author author : listOfAuthors) {
@@ -69,7 +69,7 @@ public class AppShellControllerAuthor {
         }
     }
 
-    @ShellMethod(value = "Просмотр автора в таблице AUTHORS по NAME", key = {"an", "author name"})
+    @ShellMethod(value = "Просмотр автора по NAME", key = {"an", "author name"})
     public String askForAuthorByName() {
         ioService.outputString("Введите <Имя автора книги> и нажмите Enter");
         String authorName = ioService.readString();

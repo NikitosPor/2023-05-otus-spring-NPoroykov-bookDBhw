@@ -55,7 +55,7 @@ public class BookOperationsServiceImpl implements BookOperationsService {
 
     @Transactional(readOnly = true)
     public List<Book> getAll() {
-        return (List<Book>) bookRepo.findAll();
+        return bookRepo.findAll();
     }
 
     @Transactional

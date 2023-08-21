@@ -34,7 +34,7 @@ public class AppShellControllerComment {
     }
 
 
-    @ShellMethod(value = "Cоздание комментария в таблице COMMENTS по id книги", key = {"cc", "comment creation"})
+    @ShellMethod(value = "Cоздание комментария по id книги", key = {"cc", "comment creation"})
     public String askForCommentCreation(long bookId) {
         boolean isBookExist;
         isBookExist = bookOperationsService.getById(bookId).isPresent();
@@ -50,7 +50,7 @@ public class AppShellControllerComment {
         }
     }
 
-    @ShellMethod(value = "Обновление комментария в таблице Comments по ID", key = {"cu", "comment update"})
+    @ShellMethod(value = "Обновление комментария по ID", key = {"cu", "comment update"})
     public String askForCommentUpdate(long commentId) {
         boolean isCommentExist;
         commentId = Long.parseLong(ioService.readString());
@@ -66,7 +66,7 @@ public class AppShellControllerComment {
         }
     }
 
-    @ShellMethod(value = "Удаление комментария в таблице Comments по ID", key = {"cd", "comment deletion"})
+    @ShellMethod(value = "Удаление комментария по ID", key = {"cd", "comment deletion"})
     public String askForCommentDeletion(long id) {
         commentOperationsService.deleteById(id);
         String commentIdString = String.format("Комментарий c ID: %d удален", id);
@@ -74,7 +74,7 @@ public class AppShellControllerComment {
         return commentIdString;
     }
 
-    @ShellMethod(value = "Просмотр комментария в таблице Comments по ID", key = {"cs", "comment search"})
+    @ShellMethod(value = "Просмотр комментария по ID", key = {"cs", "comment search"})
     public String askForCommentById(long id) {
         Optional<Comment> comment = commentOperationsService.getById(id);
 
@@ -85,7 +85,7 @@ public class AppShellControllerComment {
         }
     }
 
-    @ShellMethod(value = "Просмотр списка комментариев в таблице Comments по ID_Книги", key = {"cl", "comment list"})
+    @ShellMethod(value = "Просмотр списка комментариев по ID_Книги", key = {"cl", "comment list"})
     public void askForCommentsByBookId(long bookId) {
         List<Comment> commentList = commentOperationsService.getListByBookId(bookId);
         ioService.outputString("Список комментариев книги");

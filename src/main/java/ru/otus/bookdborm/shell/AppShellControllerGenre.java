@@ -28,7 +28,7 @@ public class AppShellControllerGenre {
     }
 
 
-    @ShellMethod(value = "Cоздание нового жанра в таблице GENRES", key = {"gc", "genre creation"})
+    @ShellMethod(value = "Cоздание нового жанра", key = {"gc", "genre creation"})
     public String askForGenreCreation() {
         ioService.outputString("Введите <Название жанра> и нажмите Enter");
         String genreTitle = ioService.readString();
@@ -42,7 +42,7 @@ public class AppShellControllerGenre {
         }
     }
 
-    @ShellMethod(value = "Просмотр жанра в таблице GENRES по ID", key = {"gs", "genre search"})
+    @ShellMethod(value = "Просмотр жанра по ID", key = {"gs", "genre search"})
     public String askForGenreById(long id) {
         Optional<Genre> genre = genreOperationsService.getById(id);
 
@@ -53,7 +53,7 @@ public class AppShellControllerGenre {
         }
     }
 
-    @ShellMethod(value = "Узнать количество жанров в таблице GENRES", key = {"ga", "genre amount"})
+    @ShellMethod(value = "Узнать количество жанров", key = {"ga", "genre amount"})
     public String askForGenreAmount() {
         long numberOfGenres = genreOperationsService.countOfAll();
         String numberOfGenresString = String.format("Количество жанров в таблице = %d", numberOfGenres);
@@ -61,7 +61,7 @@ public class AppShellControllerGenre {
         return numberOfGenresString;
     }
 
-    @ShellMethod(value = "Показать все жанры в таблице GENRES", key = {"gl", "genre list"})
+    @ShellMethod(value = "Показать все жанры", key = {"gl", "genre list"})
     public void askForAllGenres() {
         List<Genre> listOfGenres = genreOperationsService.getAll();
         for (Genre genre : listOfGenres) {
@@ -70,7 +70,7 @@ public class AppShellControllerGenre {
         }
     }
 
-    @ShellMethod(value = "Просмотр жанра в таблице GENRES по TITLE", key = {"gn", "genre title"})
+    @ShellMethod(value = "Просмотр жанра по TITLE", key = {"gn", "genre title"})
     public String askForGenreByTitle(String title) {
         Optional<Genre> genre = genreOperationsService.getByTitle(title);
 

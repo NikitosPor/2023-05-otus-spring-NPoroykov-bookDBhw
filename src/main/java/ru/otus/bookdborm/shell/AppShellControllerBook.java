@@ -28,7 +28,7 @@ public class AppShellControllerBook {
     }
 
 
-    @ShellMethod(value = "Cоздание книги в таблице BOOKS", key = {"bc", "book creation"})
+    @ShellMethod(value = "Cоздание книги", key = {"bc", "book creation"})
     public String askForBookCreation() {
         ioService.outputString("Введите <Название книги> и нажмите Enter");
         String bookTitle = ioService.readString();
@@ -42,7 +42,7 @@ public class AppShellControllerBook {
         return conversionService.convert(createdBook, String.class);
     }
 
-    @ShellMethod(value = "Удаление книги в таблице BOOKS по ID", key = {"bd", "book deletion"})
+    @ShellMethod(value = "Удаление книги по ID", key = {"bd", "book deletion"})
     public String askForBookDeletion(long id) {
         bookOperationsService.deleteById(id);
         String bookIdString = String.format("Книга c ID: %s удалена", id);
@@ -50,7 +50,7 @@ public class AppShellControllerBook {
         return bookIdString;
     }
 
-    @ShellMethod(value = "Просмотр книги в таблице BOOKS по ID", key = {"bs", "book search"})
+    @ShellMethod(value = "Просмотр книги по ID", key = {"bs", "book search"})
     public String askForBookById(long id) {
         Optional<Book> book = bookOperationsService.getById(id);
 
@@ -61,7 +61,7 @@ public class AppShellControllerBook {
         }
     }
 
-    @ShellMethod(value = "Узнать количество книг в таблице BOOKS", key = {"ba", "book amount"})
+    @ShellMethod(value = "Узнать количество книг", key = {"ba", "book amount"})
     public String askForBookAmount() {
         long numberOfBooks = bookOperationsService.getNumberOfAll();
         String numberOfBooksString = String.format("Количество книг в таблице = %d", numberOfBooks);
@@ -69,7 +69,7 @@ public class AppShellControllerBook {
         return numberOfBooksString;
     }
 
-    @ShellMethod(value = "Показать все книги в таблице BOOKS", key = {"bl", "book list"})
+    @ShellMethod(value = "Показать все книги", key = {"bl", "book list"})
     public void askForAllBooks() {
         List<Book> listOfBooks = bookOperationsService.getAll();
         for (Book book : listOfBooks) {
@@ -78,7 +78,7 @@ public class AppShellControllerBook {
         }
     }
 
-    @ShellMethod(value = "Обновление книги в таблице BOOKS", key = {"bu", "book update"})
+    @ShellMethod(value = "Обновление книги", key = {"bu", "book update"})
     public String updateBookById(long id) {
         Optional<Book> book = bookOperationsService.getById(id);
 
