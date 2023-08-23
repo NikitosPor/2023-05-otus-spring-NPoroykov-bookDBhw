@@ -64,7 +64,7 @@ public class AppShellControllerBook {
     @ShellMethod(value = "Узнать количество книг", key = {"ba", "book amount"})
     public String askForBookAmount() {
         long numberOfBooks = bookOperationsService.getNumberOfAll();
-        String numberOfBooksString = String.format("Количество книг в таблице = %d", numberOfBooks);
+        String numberOfBooksString = String.format("Количество книг = %d", numberOfBooks);
 
         return numberOfBooksString;
     }

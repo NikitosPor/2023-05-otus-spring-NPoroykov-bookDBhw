@@ -56,7 +56,7 @@ public class AppShellControllerGenre {
     @ShellMethod(value = "Узнать количество жанров", key = {"ga", "genre amount"})
     public String askForGenreAmount() {
         long numberOfGenres = genreOperationsService.countOfAll();
-        String numberOfGenresString = String.format("Количество жанров в таблице = %d", numberOfGenres);
+        String numberOfGenresString = String.format("Количество жанров = %d", numberOfGenres);
 
         return numberOfGenresString;
     }

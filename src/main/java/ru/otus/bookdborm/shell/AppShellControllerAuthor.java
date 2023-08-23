@@ -55,7 +55,7 @@ public class AppShellControllerAuthor {
     @ShellMethod(value = "Узнать количество авторов", key = {"aa", "author amount"})
     public String askForAuthorAmount() {
         long numberOfAuthors = authorOperationsService.countOfAll();
-        String numberOfAuthorsString = String.format("Количество авторов в таблице = %d", numberOfAuthors);
+        String numberOfAuthorsString = String.format("Количество авторов = %d", numberOfAuthors);
 
         return numberOfAuthorsString;
     }
