@@ -27,13 +27,13 @@ public class CommentOperationsServiceImpl implements CommentOperationsService {
     @Transactional(readOnly = true)
     @Override
     public Optional<Comment> getById(long id) {
-        return commentRepo.getById(id);
+        return commentRepo.findById(id);
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Comment> getListByBookId(long id) {
-        return commentRepo.getListByBookId(id);
+        return commentRepo.findAllByBookId(id);
     }
 
     @Transactional

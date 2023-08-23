@@ -1,20 +1,13 @@
 package ru.otus.bookdborm.repository;
 
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import ru.otus.bookdborm.domain.Genre;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface GenreRepo {
+public interface GenreRepo extends CrudRepository<Genre, Long> {
 
-    long count();
-
-    Genre save(Genre genre);
-
-    Optional<Genre> getById(long id);
-
-    List<Genre> getAll();
-
-    Optional<Genre>getByTitle(String title);
+    Optional<Genre> findByTitle(@Param("title") String title);
 
 }

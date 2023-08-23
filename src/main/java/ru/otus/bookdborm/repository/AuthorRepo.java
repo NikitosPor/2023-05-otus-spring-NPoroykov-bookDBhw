@@ -1,19 +1,13 @@
 package ru.otus.bookdborm.repository;
 
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import ru.otus.bookdborm.domain.Author;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface AuthorRepo {
+public interface AuthorRepo extends CrudRepository<Author, Long> {
 
-    long count();
+    Optional<Author> findByName(@Param("name") String name);
 
-    Author save(Author author);
-
-    Optional<Author> getById(long id);
-
-    List<Author> getAll();
-
-    Optional<Author> getByName(String name);
 }

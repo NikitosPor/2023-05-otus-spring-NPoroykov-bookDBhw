@@ -1,5 +1,6 @@
 package ru.otus.bookdborm.shell;
 
+import org.springframework.core.convert.ConversionService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.bookdborm.domain.Book;
@@ -14,17 +15,21 @@ public class AppShellControllerBook {
 
     private final IOService ioService;
 
+    private final ConversionService conversionService;
+
     private final BookOperationsService bookOperationsService;
 
     public AppShellControllerBook(BookOperationsService bookOperationsService,
-                                  IOService ioService) {
+                                  IOService ioService,
+                                  ConversionService conversionService) {
         this.bookOperationsService = bookOperationsService;
         this.ioService = ioService;
+        this.conversionService = conversionService;
     }
 
 
-    @ShellMethod(value = "Cоздание книги в таблице BOOKS", key = {"bc", "book creation"})
-    public void askForBookCreation() {
+    @ShellMethod(value = "Cоздание книги", key = {"bc", "book creation"})
+    public String askForBookCreation() {
         ioService.outputString("Введите <Название книги> и нажмите Enter");
         String bookTitle = ioService.readString();
         ioService.outputString("Введите <Имя Автора книги> и нажмите Enter");
@@ -34,63 +39,53 @@ public class AppShellControllerBook {
 
         Book createdBook = bookOperationsService.create(bookTitle, bookAuthor, bookGenre);
 
-        String bookString = String.format("Книга создана ID: %d, Название: %s, Автор: %s, Жанр: %s",
-                createdBook.getId(), createdBook.getTitle(), createdBook.getAuthor(), createdBook.getGenre());
-        ioService.outputString(bookString);
+        return conversionService.convert(createdBook, String.class);
     }
 
-    @ShellMethod(value = "Удаление книги в таблице BOOKS по ID", key = {"bd", "book deletion"})
-    public void askForBookDeletion(long id) {
+    @ShellMethod(value = "Удаление книги по ID", key = {"bd", "book deletion"})
+    public String askForBookDeletion(long id) {
         bookOperationsService.deleteById(id);
         String bookIdString = String.format("Книга c ID: %s удалена", id);
-        ioService.outputString(bookIdString);
+
+        return bookIdString;
     }
 
-    @ShellMethod(value = "Просмотр книги в таблице BOOKS по ID", key = {"bs", "book search"})
-    public void askForBookById(long id) {
+    @ShellMethod(value = "Просмотр книги по ID", key = {"bs", "book search"})
+    public String askForBookById(long id) {
         Optional<Book> book = bookOperationsService.getById(id);
 
-        book.ifPresentOrElse(
-                (value) -> {
-                    String bookString = String.format("Книга ID: %d, Название: %s, Автор: %s, Жанр: %s", value.getId(),
-                            value.getTitle(), value.getAuthor().getName(), value.getGenre().getTitle());
-                    ioService.outputString(bookString);
-                },
-                () -> {
-                    ioService.outputString("Книга не найдена ((");
-                }
-        );
+        if (book.isEmpty()) {
+            return "Книга не найдена ((";
+        } else {
+            return conversionService.convert(book.get(), String.class);
+        }
     }
 
-    @ShellMethod(value = "Узнать количество книг в таблице BOOKS", key = {"ba", "book amount"})
-    public void askForBookAmount() {
+    @ShellMethod(value = "Узнать количество книг", key = {"ba", "book amount"})
+    public String askForBookAmount() {
         long numberOfBooks = bookOperationsService.getNumberOfAll();
-        String numberOfBooksString = String.format("Количество книг в таблице = %d", numberOfBooks);
-        ioService.outputString(numberOfBooksString);
+        String numberOfBooksString = String.format("Количество книг = %d", numberOfBooks);
+
+        return numberOfBooksString;
     }
 
-    @ShellMethod(value = "Показать все книги в таблице BOOKS", key = {"bl", "book list"})
+    @ShellMethod(value = "Показать все книги", key = {"bl", "book list"})
     public void askForAllBooks() {
         List<Book> listOfBooks = bookOperationsService.getAll();
         for (Book book : listOfBooks) {
-            String bookString = String.format("Книга ID: %d, Название: %s, Автор: %s, Жанр: %s",
-                    book.getId(), book.getTitle(), book.getAuthor().getName(), book.getGenre().getTitle());
+            String bookString = conversionService.convert(book, String.class);
             ioService.outputString(bookString);
         }
     }
 
-    @ShellMethod(value = "Обновление книги в таблице BOOKS", key = {"bu", "book update"})
-    public void updateBookById(long id) {
+    @ShellMethod(value = "Обновление книги", key = {"bu", "book update"})
+    public String updateBookById(long id) {
         Optional<Book> book = bookOperationsService.getById(id);
-        book.ifPresentOrElse(
-                (value) -> {
-                    ioService.outputString("Введите новое <Название книги> и нажмите Enter");
-                    String bookTitle = ioService.readString();
-                    bookOperationsService.updateTitleById(id, bookTitle);
-                },
-                () -> {
-                    ioService.outputString("Книга с таким id не найдена ((");
-                }
-        );
+
+        if (book.isEmpty()) {
+            return "Книга не найдена ((";
+        } else {
+            return conversionService.convert(book.get(), String.class);
+        }
     }
 }

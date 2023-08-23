@@ -29,9 +29,9 @@ public class BookOperationsServiceImpl implements BookOperationsService {
 
     @Transactional
     public Book create(String bookTitle, String bookAuthor, String bookGenre) {
-        Author author = authorRepo.getByName(bookAuthor)
+        Author author = authorRepo.findByName(bookAuthor)
                 .orElseGet(() -> authorRepo.save(new Author(0, bookAuthor)));
-        Genre genre = genreRepo.getByTitle(bookGenre)
+        Genre genre = genreRepo.findByTitle(bookGenre)
                 .orElseGet(() -> genreRepo.save(new Genre(0, bookGenre)));
 
         Book createdBook = new Book(0L, bookTitle, author, genre);
@@ -45,7 +45,7 @@ public class BookOperationsServiceImpl implements BookOperationsService {
 
     @Transactional(readOnly = true)
     public Optional<Book> getById(long id) {
-        return bookRepo.getById(id);
+        return bookRepo.findById(id);
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +55,7 @@ public class BookOperationsServiceImpl implements BookOperationsService {
 
     @Transactional(readOnly = true)
     public List<Book> getAll() {
-        return bookRepo.getAll();
+        return bookRepo.findAll();
     }
 
     @Transactional
